@@ -1,18 +1,18 @@
 <?php
-class ControlFrecuencia
-{
-    var $objFrecuencia;
-    function __construct($objFrecuencia)
+class ControlAutor{
+    var $objAutor;
+    function __construct($objAutor)
     {
-        $this->objFrecuencia = $objFrecuencia;
+        $this->objAutor = $objAutor;
     }
     function guardar()
     {
 
-        $ide = $this->objFrecuencia->getId();
-        $des = $this->objFrecuencia->getDescripcion();
+        $ide = $this->objAutor->getId();
+        $ident = $this->objAutor->getIdent();
+        $nom = $this->objAutor->getNombre();
 
-        $comandoSql = "INSERT INTO frecuencia(id,descripcion) VALUES ('$ide', '$des')";
+        $comandoSql = "INSERT INTO tblautor(id,ident,nombre) VALUES ('$ide', '$ident','$nom')";
         $objControlConexion = new ControlConexion();
         $objControlConexion->abrirBd($GLOBALS['serv'], $GLOBALS['usua'], $GLOBALS['pass'], $GLOBALS['bdat'], $GLOBALS['port']);
         $objControlConexion->ejecutarComandoSql($comandoSql);
@@ -21,24 +21,26 @@ class ControlFrecuencia
     }
     function consultar()
     {
-        $ide = $this->objFrecuencia->getId();
+        $ide = $this->objAutor->getId();
 
-        $comandoSql = "SELECT * FROM frecuencia WHERE id = '$ide'";
+        $comandoSql = "SELECT * FROM tblautor WHERE id = '$ide'";
         $objControlConexion = new ControlConexion();
         $objControlConexion->abrirBd($GLOBALS['serv'], $GLOBALS['usua'], $GLOBALS['pass'], $GLOBALS['bdat'], $GLOBALS['port']);
         $recordSet = $objControlConexion->ejecutarSelect($comandoSql);
         if ($row = $recordSet->fetch_array(MYSQLI_BOTH)) {
-            $this->objFrecuencia->setDescripcion($row['descripcion']);
+            $this->objAutor->setIdent($row['ident']);
+            $this->objAutor->setNombre($row['nombre']);
         }
         $objControlConexion->cerrarBd();
-        return $this->objFrecuencia;
+        return $this->objAutor;
     }
     function modificar()
     {
-        $ide = $this->objFrecuencia->getId();
-        $des = $this->objFrecuencia->getDescripcion();
+        $ide = $this->objAutor->getId();
+        $ident = $this->objAutor->getIdent();
+        $nom = $this -> objAutor->getNombre();
 
-        $comandoSql = "UPDATE frecuencia SET descripcion='$des' WHERE id = '$ide'";
+        $comandoSql = "UPDATE tblautor SET ident='$ident', nombre='$nom' WHERE id = '$ide'";
         $objControlConexion = new ControlConexion();
         $objControlConexion->abrirBd($GLOBALS['serv'], $GLOBALS['usua'], $GLOBALS['pass'], $GLOBALS['bdat'], $GLOBALS['port']);
         $objControlConexion->ejecutarComandoSql($comandoSql);
@@ -46,8 +48,8 @@ class ControlFrecuencia
     }
     function borrar()
     {
-        $ide = $this->objFrecuencia->getId();
-        $comandoSql = "DELETE FROM frecuencia WHERE id = '$ide'";
+        $ide = $this->objAutor->getId();
+        $comandoSql = "DELETE FROM tblautor WHERE id = '$ide'";
         $objControlConexion = new ControlConexion();
         $objControlConexion->abrirBd($GLOBALS['serv'], $GLOBALS['usua'], $GLOBALS['pass'], $GLOBALS['bdat'], $GLOBALS['port']);
         $objControlConexion->ejecutarComandoSql($comandoSql);
@@ -55,23 +57,24 @@ class ControlFrecuencia
     }
     function listar()
     {
-        $comandoSql = "SELECT * FROM frecuencia";
+        $comandoSql = "SELECT * FROM tblautor";
         $objControlConexion = new ControlConexion();
         $objControlConexion->abrirBd($GLOBALS['serv'], $GLOBALS['usua'], $GLOBALS['pass'], $GLOBALS['bdat'], $GLOBALS['port']);
         $recordSet = $objControlConexion->ejecutarSelect($comandoSql);
         if (mysqli_num_rows($recordSet) > 0) {
-            $arregloFrecuencia = array();
+            $arregloAutor = array();
             $i = 0;
             while ($row = $recordSet->fetch_array(MYSQLI_BOTH)) {
-                $objFrecuencia = new Frecuencia("", "");
-                $objFrecuencia->setId($row['id']);
-                $objFrecuencia->setDescripcion($row['descripcion']);
-                $arregloFrecuencia[$i] = $objFrecuencia;
+                $objAutor = new Autor("", "","");
+                $objAutor->setId($row['id']);
+                $objAutor->setIdent($row['ident']);
+                $objAutor->setNombre($row['nombre']);
+                $arregloAutor[$i] = $objAutor;
                 $i++;
             }
         }
         $objControlConexion->cerrarBd();
-        return $arregloFrecuencia;
+        return $arregloAutor;
     }
 }
 ?>
