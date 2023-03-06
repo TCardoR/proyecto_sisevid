@@ -1,5 +1,5 @@
 <?php
-class tblautor
+class Autor
 {
     var $id;
     var $ident;
